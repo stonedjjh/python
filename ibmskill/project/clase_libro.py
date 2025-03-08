@@ -88,14 +88,15 @@ class Biblioteca:
         (biblioteca, str) -> None
         Presta un libro de la biblioteca.
         """
-        libros = self.buscar_libro(isbn)        
-        prestado = False
+        try:
+            libros = self.buscar_libro(isbn)                
+        except:
+            print("Error al buscar el libro")
         if len(libros) > 0:
             for libro in libros:
                 if libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
-                    print("Libro prestado.")
-                    prestado = True
+                    print("Libro prestado.")                    
                     break       
                 else:
                     print("El libro no está disponible.")
@@ -124,7 +125,21 @@ class Biblioteca:
         (biblioteca) -> str
         Muestra los libros de la biblioteca.
         """
-        print('\n'.join([libro.get_info() for libro in self.libros]))
+        #print('\n'.join([libro.get_info() for libro in self.libros]))        
+        if len(self.libros) > 0:
+            max_titulo = max(len(libro.titulo) for libro in self.libros)
+            max_autor = max(len(libro.autor) for libro in self.libros)
+            max_isbn = max(len(libro.isbn) for libro in self.libros)
+            
+            print("*" * (max_titulo + max_autor + max_isbn + 20))
+            print(f"* {'Título':<{max_titulo}} * {'Autor':<{max_autor}} * {'ISBN':<{max_isbn}} * {'Disponibilidad':<14} *")
+            print("*" * (max_titulo + max_autor + max_isbn + 20))
+            for libro in self.libros:
+                print(f"* {libro.titulo:<{max_titulo}} * {libro.autor:<{max_autor}} * {libro.isbn:<{max_isbn}} * {'Disponible' if libro.disponible else 'No disponible':<14} *")
+            print("*" * (max_titulo + max_autor + max_isbn + 20))
+        else:
+            print("No hay libros en la biblioteca.")
+
   
     
     def buscar_libro(self, isbn:str):
@@ -155,8 +170,15 @@ class Sistema:
         Muestra las opciones del menú.
         """
         print("Menú:")
-        for key, value in self.opciones.items():
-            print(f"{key}: {value}")
+        print('*'*21)
+        for key, value in self.opciones.items():            
+            cadena = f"* {key}: {value}"
+            longitud_cadena = len(cadena)
+            if longitud_cadena < 20:
+                espacios_necesarios = 20 - longitud_cadena
+                cadena = cadena + " " * espacios_necesarios + '*'
+            print(cadena)
+            print('*'*21)
 
     def limpiar_pantalla(self):
         """
