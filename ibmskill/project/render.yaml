@@ -1,0 +1,6 @@
+services:
+  - type: worker
+    name: clase-libro-worker
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python clase_libro.py
