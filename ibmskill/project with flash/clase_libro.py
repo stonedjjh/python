@@ -87,7 +87,7 @@ class Biblioteca:
 
     def prestar_libro(self, id: int):
         """
-        (biblioteca, str) -> None
+        (biblioteca, int) -> bool or None
         Presta un libro de la biblioteca mediante su ID.
         """
         try:
@@ -103,22 +103,23 @@ class Biblioteca:
         except:
           return None
 
-    def devolver_libro(self, isbn: str):
+    def devolver_libro(self, id: int):
         """
-        (biblioteca, str) -> None
+        (biblioteca, int) -> bool or None
         Devuelve un libro a la biblioteca.
         """
-        libros = self.buscar_libro(isbn)
-        if len(libros) > 0:
-            for libro in libros:
+        try:            
+            if 0 <= id < len(self.libros): 
+                libro = self.libros[id]
                 if not libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
-                    print("Libro devuelto.")
-                    break
+                    return True
                 else:
-                    print("El libro no está prestado.")
-        else:
-            print("El libro no está en la biblioteca.")
+                    return False
+            else:
+              return None
+        except:
+          return None
 
     def mostrar_libros(self):
         """

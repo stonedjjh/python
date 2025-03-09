@@ -13,19 +13,40 @@
       <nav class="nav__header">
         <ul class="text-2x">
           <li>
-            <a>Agregar libro</a>
+            <a onclick="mostrarCanvas()">Agregar libro</a>
           </li>
           <li>
             <a onclick="listarLibros()">Mostrar libros</a>
           </li>
-          <li>
-            <a>Buscar</a>
-          </li>
         </ul>
       </nav>
     </header>
-    <main class="main__container">
+    <main>
       <tabla-libros></tabla-libros>
+      <canvas id="myCanvas" class="myCanvas" style="display: none">
+        <div class="canvas__content">
+          <div class="canvas__header">
+            <h2>Agregar Libro</h2>
+            <button id="closeCanvas" class="close__button">X</button>
+          </div>
+          <div class="canvas__body">
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn" required />
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" required />
+            <label for="autor">Autor:</label>
+            <input type="text" id="autor" name="autor" required />
+            <label for="disponible">Disponible:</label>
+            <select id="disponible" name="disponible">
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+          <div class="canvas__footer">
+            <button id="guardarLibro" class="save__button">Guardar</button>
+          </div>
+        </div>
+      </canvas>
     </main>
     <footer>
       <h3>Realizado por: <span class="flag">Daniel Jiménez</span></h3>

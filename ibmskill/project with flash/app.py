@@ -42,7 +42,36 @@ def prestar(id):
       return jsonify({"message": "ID de libro incorrecto.", "success": False})
     else:
       return jsonify({"message": "El libro no está disponible", "success": False})
-    
+
+@app.route("/devolver/<int:id>")
+def devolver(id):
+    result=mi_biblioteca.devolver_libro(id)
+    if result:
+      return jsonify({"message": "Libro devuelto", "success": True})
+    elif result is None:
+      return jsonify({"message": "ID de libro incorrecto.", "success": False})
+    else:
+      return jsonify({"message": "El libro no está disponible", "success": False})    
+
+@app.route("/guardar", methods=["POST"])
+def guardar():
+    titulo = request.form.get("titulo")
+    isbn = request.form.get("isbn")
+    autor = request.form.get("autor")
+    disponible = request.form.get("disponible") == "true"
+
+    if not all([titulo, isbn, autor, disponible is not None]):
+        return jsonify({"message": "Faltan datos", "success": False})
+
+    try:
+        mi_biblioteca.agregar_clase_libro(
+            clase_libro.Libro(titulo, autor, isbn, disponible)
+        )
+        return jsonify({"message": "Libro guardado", "success": True})
+    except Exception as e:
+        return jsonify({"message": f"Error al guardar el libro: {e}", "success": False})
+
+
 
 app.run(host="0.0.0.0", port=8000, debug=True)
 
