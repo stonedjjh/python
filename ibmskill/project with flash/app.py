@@ -1,4 +1,16 @@
+"""
+Este módulo define una aplicación web Flask para gestionar una biblioteca de libros.
+
+Funcionalidades:
+- Listar libros.
+- Prestar libros.
+- Devolver libros.
+- Guardar libros.
+
+"""
+
 from flask import Flask, request, jsonify, render_template
+
 import clase_libro
 
 
@@ -37,21 +49,21 @@ def listar():
 def prestar(id):
     result=mi_biblioteca.prestar_libro(id)
     if result:
-      return jsonify({"message": "Libro prestado", "success": True})
+        return jsonify({"message": "Libro prestado", "success": True})
     elif result is None:
-      return jsonify({"message": "ID de libro incorrecto.", "success": False})
+        return jsonify({"message": "ID de libro incorrecto.", "success": False})
     else:
-      return jsonify({"message": "El libro no está disponible", "success": False})
+        return jsonify({"message": "El libro no está disponible", "success": False})
 
 @app.route("/devolver/<int:id>")
 def devolver(id):
     result=mi_biblioteca.devolver_libro(id)
     if result:
-      return jsonify({"message": "Libro devuelto", "success": True})
+        return jsonify({"message": "Libro devuelto", "success": True})
     elif result is None:
-      return jsonify({"message": "ID de libro incorrecto.", "success": False})
+        return jsonify({"message": "ID de libro incorrecto.", "success": False})
     else:
-      return jsonify({"message": "El libro no está disponible", "success": False})    
+        return jsonify({"message": "El libro no está disponible", "success": False})    
 
 @app.route("/guardar", methods=["POST"])
 def guardar():
@@ -70,8 +82,6 @@ def guardar():
         return jsonify({"message": "Libro guardado", "success": True})
     except Exception as e:
         return jsonify({"message": f"Error al guardar el libro: {e}", "success": False})
-
-
 
 app.run(host="0.0.0.0", port=8000, debug=True)
 

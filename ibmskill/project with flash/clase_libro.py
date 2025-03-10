@@ -1,3 +1,11 @@
+"""
+Este módulo define la clase Libro y proporciona funcionalidades para gestionar libros.
+
+Funcionalidades:
+- Creación de objetos Libro.
+- Almacenamiento y recuperación de información de libros.
+- ... (otras funcionalidades)
+"""
 import json
 
 # se define la clase libro
@@ -42,7 +50,11 @@ class Libro:
         (Libro) -> str
         Devuelve la información del libro.
         """
-        return f"El libro {self.titulo} de {self.autor} con isbn {self.isbn}  {'está disponible' if self.disponible else 'no está disponible'}."
+        return (
+            f"El libro {self.titulo} de {self.autor} con isbn {self.isbn} "
+            f"{'está disponible' if self.disponible else 'no está disponible'}."
+        )
+
 
     def mostrar_info(self):
         """
@@ -50,7 +62,8 @@ class Libro:
         Devuelve la información del libro.
         """
         print(
-            f"El libro {self.titulo} de {self.autor} con isbn {self.isbn} {'está disponible' if self.disponible else 'no está disponible'}."
+            f"El libro {self.titulo} de {self.autor} con isbn {self.isbn} "
+            f"{'está disponible' if self.disponible else 'no está disponible'}."
         )
 
 
@@ -92,24 +105,24 @@ class Biblioteca:
         """
         try:
             if 0 <= id < len(self.libros):
-              libro= self.libros[id]
-              if libro.get_disponibilidad():
-                  libro.cambiar_disponibilidad()
-                  return True
-              else:
-                return False
+                libro= self.libros[id]
+                if libro.get_disponibilidad():
+                    libro.cambiar_disponibilidad()
+                    return True
+                else:
+                    return False
             else:
-              return None
+                return None
         except:
-          return None
+            print("Error al prestar el libro")
 
     def devolver_libro(self, id: int):
         """
         (biblioteca, int) -> bool or None
         Devuelve un libro a la biblioteca.
         """
-        try:            
-            if 0 <= id < len(self.libros): 
+        try:
+            if 0 <= id < len(self.libros):
                 libro = self.libros[id]
                 if not libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
@@ -117,9 +130,9 @@ class Biblioteca:
                 else:
                     return False
             else:
-              return None
+                return None
         except:
-          return None
+            return None
 
     def mostrar_libros(self):
         """
