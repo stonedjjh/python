@@ -5,18 +5,27 @@
   border: 0;
 }
 
+.btn {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px  solid black;
+  cursor: pointer;
+  width: 30%;
+}
+
+
+
 .success {
   background-color: green;
   color: white;
   font-weight: bold;
-  border: 1px 5px solid black;
+
 }
 
 .cancel {
   background-color: red;
   color: white;
-  font-weight: bold;
-  border: 1px 5px solid black;
+  font-weight: bold;  
 }
 
 html {
@@ -110,4 +119,19 @@ footer {
   color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.myCanvas{
+  color:#0a0a23;
+
+  .canvas__header{
+    text-align: center;
+  }
+
+  .canvas__footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
 }

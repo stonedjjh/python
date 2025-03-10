@@ -385,3 +385,17 @@ function ocultarCanvas() {
     canvas.style.display = "none";
   }, 300); // 300ms es la duración de la transición, debe coincidir
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  const formulario = document.getElementById('myForm');
+  const botonGuardar = document.getElementById('guardarLibro');
+
+  botonGuardar.addEventListener('click', function(event) {
+    event.preventDefault(); // Evita la recarga de la página
+    const formData = new FormData(formulario);
+    const data = Object.fromEntries(formData.entries());
+    const jsonData = JSON.stringify(data);
+    // Envia jsonData al API
+  });
+});

@@ -10,6 +10,16 @@ import json
 
 # se define la clase libro
 class Libro:
+    """
+    Esta clase representa un libro en la biblioteca.
+
+    Atributos:
+        titulo (str): El título del libro.
+        autor (str): El autor del libro.
+        isbn (str): El ISBN del libro.
+        disponible (bool): Indica si el libro está disponible para préstamo.
+    """
+
     def __init__(self, titulo: str, autor: str, isbn: str, disponible: bool):
         """
         (Libro, str, str, bool) -> None
@@ -69,6 +79,13 @@ class Libro:
 
 # definimos la clase biblioteca que tiene una lista de libros
 class Biblioteca:
+    """
+    Esta clase representa una biblioteca que contiene una lista de libros.
+
+    Atributos:
+        libros (list): Una lista de objetos Libro.
+    """
+
     def __init__(self):
         """
         (biblioteca) -> None
@@ -92,20 +109,22 @@ class Biblioteca:
         autor = input("Ingrese el autor del libro: ")
         isbn = input("Ingrese el isbn del libro: ")
         disponible = input("El libro está disponible? (s/n): ")
-        disponible = True if disponible == "s" else False
+        disponible = disponible == "s"
         try:
             self.libros.append(Libro(titulo, autor, isbn, disponible))
-        except:
-            print("Error al agregar el libro")
+        except ValueError as e:
+            print(f"Error en los datos del libro: {e}")
+        except TypeError as e:
+            print(f"Error en el tipo de dato: {e}")
 
-    def prestar_libro(self, id: int):
+    def prestar_libro(self, libro_id: int):
         """
         (biblioteca, int) -> bool or None
         Presta un libro de la biblioteca mediante su ID.
         """
         try:
-            if 0 <= id < len(self.libros):
-                libro= self.libros[id]
+            if 0 <= libro_id < len(self.libros):
+                libro= self.libros[libro_id]
                 if libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
                     return True
@@ -113,17 +132,18 @@ class Biblioteca:
                     return False
             else:
                 return None
-        except:
-            print("Error al prestar el libro")
+        except IndexError:
+            print("Error: Índice fuera de rango al prestar el libro.")
+            return None
 
-    def devolver_libro(self, id: int):
+    def devolver_libro(self, libro_id: int):
         """
         (biblioteca, int) -> bool or None
         Devuelve un libro a la biblioteca.
         """
         try:
-            if 0 <= id < len(self.libros):
-                libro = self.libros[id]
+            if 0 <= libro_id < len(self.libros):
+                libro = self.libros[libro_id]
                 if not libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
                     return True
@@ -131,7 +151,8 @@ class Biblioteca:
                     return False
             else:
                 return None
-        except:
+        except IndexError:
+            print("Error: Índice fuera de rango al devolver el libro.")
             return None
 
     def mostrar_libros(self):
@@ -143,7 +164,7 @@ class Biblioteca:
             libros_data = []
             for index, libro in enumerate(self.libros):
                 libros_data.append(
-                    {   
+                    {
                         "id": index,
                         "titulo": libro.titulo,
                         "autor": libro.autor,

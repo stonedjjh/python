@@ -37,36 +37,66 @@ for libro in libros_inicio:
 
 @app.route("/")
 def index():
+    """    
+    Esta función maneja la ruta raíz ("/") de la aplicación.
+    Renderiza la plantilla 'index.html' que sirve como página principal.
+    """
     return render_template("index.html")
 
 
 @app.route("/listar")
 def listar():
+    """
+    Esta función maneja la ruta "/listar" de la aplicación.
+    Devuelve una lista de todos los libros en la biblioteca en formato JSON.
+    """
+
     return mi_biblioteca.mostrar_libros()
 
 
-@app.route("/prestar/<int:id>")
-def prestar(id):
-    result=mi_biblioteca.prestar_libro(id)
+@app.route("/prestar/<int:libro_id>")
+def prestar(libro_id):
+    """
+    (int)->json    
+    Esta función maneja la ruta "/prestar/<int:id>" de la aplicación.
+    Permite prestar un libro de la biblioteca mediante su ID.
+    Devuelve un mensaje JSON indicando si el libro fue prestado o no.
+    """
+
+    result = mi_biblioteca.prestar_libro(libro_id)
     if result:
         return jsonify({"message": "Libro prestado", "success": True})
-    elif result is None:
+    if result is None:
         return jsonify({"message": "ID de libro incorrecto.", "success": False})
-    else:
-        return jsonify({"message": "El libro no está disponible", "success": False})
+    return jsonify({"message": "El libro no está disponible", "success": False})
 
-@app.route("/devolver/<int:id>")
-def devolver(id):
-    result=mi_biblioteca.devolver_libro(id)
+
+@app.route("/devolver/<int:libro_id>")
+def devolver(libro_id):
+    """
+    (int)->json
+    Esta función maneja la ruta "/devolver/<int:id>" de la aplicación.
+    Permite devolver un libro a la biblioteca mediante su ID.
+    Devuelve un mensaje JSON indicando si el libro fue devuelto o no.
+    """
+
+    result = mi_biblioteca.devolver_libro(libro_id)
     if result:
         return jsonify({"message": "Libro devuelto", "success": True})
-    elif result is None:
+    if result is None:
         return jsonify({"message": "ID de libro incorrecto.", "success": False})
-    else:
-        return jsonify({"message": "El libro no está disponible", "success": False})    
+    return jsonify({"message": "El libro no está disponible", "success": False})
+
 
 @app.route("/guardar", methods=["POST"])
 def guardar():
+    """
+    Esta función maneja la ruta "/guardar" de la aplicación.
+    Permite guardar un libro en la biblioteca.
+    Recibe los datos del libro a través de un formulario POST.
+    Devuelve un mensaje JSON indicando si el libro fue guardado o no.
+    """
+
     titulo = request.form.get("titulo")
     isbn = request.form.get("isbn")
     autor = request.form.get("autor")
@@ -80,8 +110,9 @@ def guardar():
             clase_libro.Libro(titulo, autor, isbn, disponible)
         )
         return jsonify({"message": "Libro guardado", "success": True})
-    except Exception as e:
-        return jsonify({"message": f"Error al guardar el libro: {e}", "success": False})
+    except ValueError as e:
+        return jsonify({"message": f"Error en los datos del libro: {e}", "success": False})
+    except TypeError as e:
+        return jsonify({"message": f"Error en el tipo de dato: {e}", "success": False})
 
 app.run(host="0.0.0.0", port=8000, debug=True)
-
