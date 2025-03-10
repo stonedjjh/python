@@ -30,17 +30,28 @@
           </div>          
           <div class="canvas__body">
             <form id="myForm">
-              <label for="isbn">ISBN:</label>
-              <input type="text" id="isbn" name="isbn" required />
-              <label for="titulo">Título:</label>
-              <input type="text" id="titulo" name="titulo" required />
-              <label for="autor">Autor:</label>
-              <input type="text" id="autor" name="autor" required />
-              <label for="disponible">Disponible:</label>
-              <select id="disponible" name="disponible">
-                <option value="true">Sí</option>
-                <option value="false">No</option>
-              </select>
+              <fieldset>
+                <legend>Libro</legend>
+                  <div>
+                    <label for="isbn">ISBN:</label>
+                    <input type="text" id="isbn" name="isbn" onblur="buscarLibroPorIsbnEvent(event)" required />
+                  </div>
+                  <div>
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" name="titulo" required />
+                  </div>
+                  <div>
+                    <label for="autor">Autor:</label>
+                    <input type="text" id="autor" name="autor" required />
+                  </div>
+                  <div>
+                    <label for="disponible">Disponible:</label>
+                    <select id="disponible" name="disponible">                      
+                      <option value="true">Sí</option>
+                      <option value="false">No</option>
+                    </select>
+                  </div>
+            </fieldset>
             </form>
           </div>
           <div class="canvas__footer">

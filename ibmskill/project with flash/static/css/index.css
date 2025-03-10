@@ -135,3 +135,14 @@ footer {
     gap: 15px;
   }
 }
+
+fieldset{
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  margin: 15px 0;
+  legend{
+    text-align: center;
+    margin: 15px 0;
+  }
+}

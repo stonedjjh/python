@@ -61,7 +61,9 @@ class TablaLibros extends HTMLElement {
             text-align: left;
           }
           th {
-            background-color: #f2f2f2;
+            background-color: #0a0a23;
+            color: white;
+            border-color: white;
           }
           /* Estilos para los botones */
           button {
@@ -355,7 +357,7 @@ function mostrarCanvas() {
   canvas.style.right = "0";
   canvas.style.width = "300px"; // Ancho del offcanvas (puedes ajustarlo)
   canvas.style.height = "100%"; // Altura completa de la pantalla
-  canvas.style.backgroundColor = "white"; // Fondo blanco
+  canvas.style.backgroundColor = "#e5e7eb"; // Fondo blanco
   canvas.style.boxShadow = "-2px 0px 5px rgba(0, 0, 0, 0.3)"; // Sombra lateral
   canvas.style.transition = "transform 0.3s ease-in-out"; // Transición suave
   canvas.style.zIndex = "1050"; // Asegurarse de que esté por encima de otros elementos
@@ -397,3 +399,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Envia jsonData al API
   });
 });
+
+
+async function buscarLibroPorIsbn(isbn) {  
+  try {    
+    const response = await fetch(`/buscar/${isbn}`);
+    console.log(response)
+    if (!response.ok) {
+      throw new Error(`Error HTTP! estado: ${response.status}`);
+    }    
+    const data = await response.json();    
+    console.log(data.success)
+    if (data.success) {      
+      console.log(data)
+      document.getElementById("autor").value = data.autor;
+      document.getElementById("titulo").value = data.titulo;
+      const selectDisponible = document.getElementById("disponible");
+      selectDisponible.value = data.disponible ? "true" : "false";
+    }
+  } catch (error) {
+    console.error("Error al buscar el libro:", error);
+  }
+}
+
+function buscarLibroPorIsbnEvent(event) {
+  const isbnInput = event.target;
+  const isbn = isbnInput.value;
+  if (isbn.trim() !== "") {
+    buscarLibroPorIsbn(isbn);
+  }
+}
+

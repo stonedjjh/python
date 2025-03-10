@@ -129,8 +129,7 @@ class Biblioteca:
                     libro.cambiar_disponibilidad()
                     return True
                 return False
-            else:
-                return None
+            return None
         except IndexError:
             print("Error: Índice fuera de rango al prestar el libro.")
             return None
@@ -147,8 +146,7 @@ class Biblioteca:
                     libro.cambiar_disponibilidad()
                     return True
                 return False
-            else:
-                return None
+            return None
         except IndexError:
             print("Error: Índice fuera de rango al devolver el libro.")
             return None
@@ -181,3 +179,22 @@ class Biblioteca:
         Busca un libro por su isbn.
         """
         return list(filter(lambda self: isbn in self.isbn, self.libros))
+
+    def buscar_libro_exacto(self, isbn: str):
+        """
+        (biblioteca, str) -> Libro or None
+        Busca un libro por su isbn, coincidiendo exactamente con el isbn pasado como parámetro.
+        """
+        for libro in self.libros:
+            if libro.isbn == isbn:
+                return json.dumps(
+                    {
+                        "titulo": libro.titulo,
+                        "autor": libro.autor,
+                        "isbn": libro.isbn,
+                        "disponible": libro.disponible,   
+                        "success":True
+                    },
+                    indent=4
+                )
+        return json.dumps({"message": "No se encontró el libro."}, indent=4)

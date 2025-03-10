@@ -43,7 +43,7 @@ for libro in libros_inicio:
 @app.route("/")
 def index():
     """    
-    Esta función maneja la ruta raíz ("/") de la aplicación.
+    Esta función maneja la ruta raíz ('/') de la aplicación.
     Renderiza la plantilla 'index.html' que sirve como página principal.
     """
     return render_template("index.html")
@@ -119,5 +119,17 @@ def guardar():
         return jsonify({"message": f"Error en los datos del libro: {e}", "success": False})
     except TypeError as e:
         return jsonify({"message": f"Error en el tipo de dato: {e}", "success": False})
+
+@app.route("/buscar/<string:libro_isbn>")
+def buscar(libro_isbn):
+    """
+    (str)->json
+    Esta función maneja la ruta "/buscar/<string:isbn>" de la aplicación.
+    Permite buscar un libro en la biblioteca mediante su ISBN.
+    Devuelve un mensaje JSON con la información del libro o un mensaje de error.
+    """
+    result = mi_biblioteca.buscar_libro_exacto(libro_isbn)
+    return result
+
 
 app.run(host="0.0.0.0", port=8000, debug=True)
