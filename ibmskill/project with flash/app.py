@@ -9,7 +9,12 @@ Funcionalidades:
 
 """
 
-from flask import Flask, request, jsonify, render_template
+import sys
+try:
+    from flask import Flask, request, jsonify, render_template
+except ImportError:
+    print("Error: Flask no está instalado. Por favor, instálalo con 'pip install Flask'")
+    sys.exit(1)
 
 import clase_libro
 

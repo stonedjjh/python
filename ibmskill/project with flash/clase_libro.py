@@ -128,8 +128,7 @@ class Biblioteca:
                 if libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
                     return True
-                else:
-                    return False
+                return False
             else:
                 return None
         except IndexError:
@@ -147,8 +146,7 @@ class Biblioteca:
                 if not libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
                     return True
-                else:
-                    return False
+                return False
             else:
                 return None
         except IndexError:
@@ -174,10 +172,8 @@ class Biblioteca:
                 )
             # Devolver los datos como un json
             return json.dumps(libros_data, indent=4)
-
-        else:
-            # Devolver un json con el mensaje de error.
-            return json.dumps({"message": "No hay libros en la biblioteca."})
+        # Devolver un json con el mensaje de error.
+        return json.dumps({"message": "No hay libros en la biblioteca."})
 
     def buscar_libro(self, isbn: str):
         """

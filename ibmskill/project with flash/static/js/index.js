@@ -126,11 +126,7 @@ class TablaLibros extends HTMLElement {
           }
   
         </style>
-        ${
-          this.filteredData.length > 0 || this.data.hasOwnProperty("message")
-            ? this.getSearchTemplate()
-            : ""
-        }
+        ${this.getSearchTemplate()}
         ${this.getTableTemplate()}
         ${this.getPaginationTemplate()}
       `;
@@ -147,15 +143,7 @@ class TablaLibros extends HTMLElement {
       });
 
       // Poner el foco y cursor al final del input si hay datos
-      if (this.filteredData.length > 0) {
-        setTimeout(() => {
-          searchInput.focus();
-          searchInput.setSelectionRange(
-            searchInput.value.length,
-            searchInput.value.length
-          );
-        }, 0);
-      }
+      
     }
   }
 
@@ -214,39 +202,39 @@ class TablaLibros extends HTMLElement {
   }
 
   getTableTemplate() {
+    let tableRows = "";
     //Comprobar si el json que recibe tiene un mensaje.
     if (this.data.hasOwnProperty("message")) {
-      return `<p>${this.data.message}</p>`;
-    }
-    if (this.filteredData.length === 0) {
-      return "<p>Sin Resultados</p>";
-    }
+      tableRows = `<tr><td colspan="6">${this.data.message}</td></tr>`;
+    } else if (this.filteredData.length === 0) {
+      tableRows = `<tr><td colspan="6">Sin Resultados</td></tr>`;
+    } else {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      const currentData = this.filteredData.slice(startIndex, endIndex);
 
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    const currentData = this.filteredData.slice(startIndex, endIndex);
-
-    let tableRows = currentData
-      .map(
-        (item, index) => `
-      <tr>
-        <td>${item.id}</td>
-        <td>${item.autor}</td>
-        <td>${item.titulo}</td>
-        <td>${item.isbn}</td>
-        <td>${item.disponible ? "Disponible" : "No Disponible"}</td>
-        <td>
-          <button class="devolver" ${
-            item.disponible ? "disabled" : ""
-          } onclick="devolverLibro(${item.id})">Devolver</button>
-          <button class="prestar" ${
-            item.disponible ? "" : "disabled"
-          } onclick="prestarLibro(${item.id})">Prestar</button>
-        </td>
-      </tr>
-    `
-      )
-      .join("");
+      tableRows = currentData
+        .map(
+          (item, index) => `
+        <tr>
+          <td>${item.id}</td>
+          <td>${item.autor}</td>
+          <td>${item.titulo}</td>
+          <td>${item.isbn}</td>
+          <td>${item.disponible ? "Disponible" : "No Disponible"}</td>
+          <td>
+            <button class="devolver" ${
+              item.disponible ? "disabled" : ""
+            } onclick="devolverLibro(${item.id})">Devolver</button>
+            <button class="prestar" ${
+              item.disponible ? "" : "disabled"
+            } onclick="prestarLibro(${item.id})">Prestar</button>
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+    }
 
     return `
       <table>
@@ -284,6 +272,16 @@ class TablaLibros extends HTMLElement {
     }
 
     this.render();
+       // Obtener el campo de busqueda despues del render.
+    const searchInput = this.shadowRoot.getElementById("searchInput");
+    // Poner el foco y cursor al final del input si hay datos
+    if (searchInput) {
+        searchInput.focus();
+        searchInput.setSelectionRange(
+        searchInput.value.length,
+        searchInput.value.length
+      );
+    }
   }
 }
 
