@@ -80,7 +80,7 @@ main {
   display: flex;
   height: 75%;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .opciones {
