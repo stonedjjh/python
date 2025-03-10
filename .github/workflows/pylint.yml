@@ -19,4 +19,5 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
     - name: Analysing the code with pylint
+      working-directory: project\ with\ flash
       run: pylint .
