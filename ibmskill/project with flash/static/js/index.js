@@ -47,7 +47,7 @@ class TablaLibros extends HTMLElement {
           }
           #searchInput {
             padding: 5px;
-            border: 1px solid #ccc;
+            border: 3px solid #000;
             border-radius: 4px;
             width: 200px;
           }
@@ -59,6 +59,7 @@ class TablaLibros extends HTMLElement {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
+            background-color: #fff;
           }
           th {
             background-color: #0a0a23;
@@ -311,11 +312,10 @@ async function prestarLibro(id) {
     if (!response.ok) {
       throw new Error(`Error HTTP! estado: ${response.status}`);
     }
-    const data = await response.json();
-    console.log(data);
+    const data = await response.json();    
     //Comprobar si la operacion ha tenido exito.
     if (data.success) {
-      console.log(data.message);
+      mostrarToast(data.message);
     } else {
       console.error(data.message);
     }
@@ -332,11 +332,10 @@ async function devolverLibro(id) {
     if (!response.ok) {
       throw new Error(`Error HTTP! estado: ${response.status}`);
     }
-    const data = await response.json();
-    console.log(data);
+    const data = await response.json();    
     //Comprobar si la operacion ha tenido exito.
     if (data.success) {
-      console.log(data.message);
+      mostrarToast(data.message);
     } else {
       console.error(data.message);
     }
@@ -357,7 +356,7 @@ function mostrarCanvas() {
   canvas.style.right = "0";
   canvas.style.width = "300px"; // Ancho del offcanvas (puedes ajustarlo)
   canvas.style.height = "100%"; // Altura completa de la pantalla
-  canvas.style.backgroundColor = "#e5e7eb"; // Fondo blanco
+  canvas.style.backgroundColor = "#fff"; // Fondo blanco
   canvas.style.boxShadow = "-2px 0px 5px rgba(0, 0, 0, 0.3)"; // Sombra lateral
   canvas.style.transition = "transform 0.3s ease-in-out"; // Transición suave
   canvas.style.zIndex = "1050"; // Asegurarse de que esté por encima de otros elementos
@@ -394,31 +393,49 @@ document.addEventListener('DOMContentLoaded', function() {
   botonGuardar.addEventListener('click', function(event) {
     event.preventDefault(); // Evita la recarga de la página
     const formData = new FormData(formulario);
-    const data = Object.fromEntries(formData.entries());
-    const jsonData = JSON.stringify(data);
-    // Envia jsonData al API
+    // Envia los datos al API
+    async function guardarLibro() {
+      try {
+        const data = Object.fromEntries(formData.entries());
+        const response = await fetch("/guardar", {
+          method: "POST",
+          body: formData,
+        });
+        if (!response.ok) {
+          throw new Error(`Error HTTP! estado: ${response.status}`);
+        }
+        const dataResponse = await response.json();        
+        //Comprobar si la operacion ha tenido exito.
+        ocultarCanvas()
+        if (dataResponse.success) {                    
+          listarLibros();
+          formulario.reset()
+        }
+        mostrarToast(dataResponse.message);          
+      } catch (error) {
+        console.error("Error al guardar el libro:", error);
+      }
+    }
+    guardarLibro();
   });
 });
 
 
 async function buscarLibroPorIsbn(isbn) {  
   try {    
-    const response = await fetch(`/buscar/${isbn}`);
-    console.log(response)
+    const response = await fetch(`/buscar/${isbn}`);    
     if (!response.ok) {
       throw new Error(`Error HTTP! estado: ${response.status}`);
     }    
-    const data = await response.json();    
-    console.log(data.success)
-    if (data.success) {      
-      console.log(data)
+    const data = await response.json();        
+    if (data.success) {            
       document.getElementById("autor").value = data.autor;
       document.getElementById("titulo").value = data.titulo;
       const selectDisponible = document.getElementById("disponible");
       selectDisponible.value = data.disponible ? "true" : "false";
     }
   } catch (error) {
-    console.error("Error al buscar el libro:", error);
+    mostrarToast("Error al buscar el libro:", error);
   }
 }
 
@@ -430,3 +447,53 @@ function buscarLibroPorIsbnEvent(event) {
   }
 }
 
+function mostrarToast(texto) {
+  // Crear el contenedor del toast
+  const toastContainer = document.createElement("div");
+  toastContainer.style.position = "fixed";
+  toastContainer.style.top = "20px";
+  toastContainer.style.right = "20px";
+  toastContainer.style.backgroundColor = "#333";
+  toastContainer.style.color = "#fff";
+  toastContainer.style.padding = "15px";
+  toastContainer.style.borderRadius = "5px";
+  toastContainer.style.zIndex = "2000";
+  toastContainer.style.opacity = "0";
+  toastContainer.style.transition = "opacity 0.5s ease-in-out";
+  toastContainer.style.boxShadow = "0 4px 8px rgba(229, 231, 235, 0.8)";
+  
+
+  // Crear el texto del toast
+  const toastText = document.createElement("p");
+  toastText.textContent = texto;
+  toastText.style.margin = "0";
+
+  // Crear la barra de progreso
+  const progressBar = document.createElement("div");
+  progressBar.style.width = "0%";
+  progressBar.style.height = "5px";
+  progressBar.style.backgroundColor = "green";
+  progressBar.style.transition = "width 3s linear";
+  progressBar.style.marginTop = "10px";
+
+  // Añadir el texto y la barra al contenedor
+  toastContainer.appendChild(toastText);
+  toastContainer.appendChild(progressBar);
+
+  // Añadir el contenedor al body
+  document.body.appendChild(toastContainer);
+
+  // Mostrar el toast
+  setTimeout(() => {
+    toastContainer.style.opacity = "1";
+    progressBar.style.width = "100%";
+  }, 100);
+
+  // Ocultar el toast después de 3 segundos
+  setTimeout(() => {
+    toastContainer.style.opacity = "0";
+    setTimeout(() => {
+      document.body.removeChild(toastContainer);
+    }, 500);
+  }, 3000);
+}
