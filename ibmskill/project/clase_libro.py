@@ -1,7 +1,7 @@
 import os
 
 #se define la clase libro
-class Libro:    
+class Libro:
     def __init__(self, titulo:str, autor:str, isbn:str, disponible:bool):
         """
         (Libro, str, str, bool) -> None
@@ -11,8 +11,7 @@ class Libro:
         self.autor = autor
         self.isbn = isbn
         self.disponible = disponible
-    
-    
+
     def cambiar_disponibilidad(self):
         """
         (Libro) -> None
@@ -21,7 +20,7 @@ class Libro:
         >>>false ->true
         """
         self.disponible = not self.disponible
-    
+
     def get_disponibilidad(self):
         """
         (Libro) -> bool
@@ -30,29 +29,31 @@ class Libro:
         >>>false
         """
         return self.disponible
-    
+
     def get_isbn(self):
         """
         (Libro) -> str
         Devuelve el isbn del libro.
         """
         return self.isbn
-    
+
     def get_info(self):
         """
         (Libro) -> str
         Devuelve la información del libro.
         """
-        return f"El libro {self.titulo} de {self.autor} con isbn {self.isbn}  {'está disponible' if self.disponible else 'no está disponible'}."
-    
+        return f"El libro {self.titulo} de {self.autor} con isbn {self.isbn}  {'está disponible' \
+                if self.disponible else 'no está disponible'}."
+
     def mostrar_info(self):
         """
         (Libro) -> str
         Devuelve la información del libro.
         """
-        print(f"El libro {self.titulo} de {self.autor} con isbn {self.isbn} {'está disponible' if self.disponible else 'no está disponible'}.")
+        print(f"El libro {self.titulo} de {self.autor} con isbn {self.isbn} " \
+                f"{'está disponible' if self.disponible else 'no está disponible'}.")
 
-#definimos la clase biblioteca que tiene una lista de libros        
+#definimos la clase biblioteca que tiene una lista de libros
 class Biblioteca:
     def __init__(self):
         """
@@ -61,48 +62,64 @@ class Biblioteca:
         """
         self.libros = []
 
-    def agregar_clase_libro(self, libro:Libro):
+    def agregar_clase_libro(self, nuevo_libro:Libro):
         """
         (biblioteca, libro) -> None
         Agrega un libro a la biblioteca.
         """
-        self.libros.append(libro)
+        self.libros.append(nuevo_libro)
+
+    @staticmethod
+    def validar_entrada(value):
+        if value:
+           return False
+        else:
+            print("El valor ingresado no es valido")
+            return True
 
     def agregar_libro(self):
         """
         (biblioteca) -> None
         Agrega un libro a la biblioteca.
         """
-        titulo = input("Ingrese el título del libro: ")
-        autor = input("Ingrese el autor del libro: ")
-        isbn = input("Ingrese el isbn del libro: ")
+        repetir = True
+        while repetir:
+            titulo = input("Ingrese el título del libro: ")
+            repetir= Biblioteca.validar_entrada(titulo)
+        repetir = True
+        while repetir:
+            autor = input("Ingrese el autor del libro: ")
+            repetir= Biblioteca.validar_entrada(autor)
+        repetir = True
+        while repetir:
+            isbn = input("Ingrese el isbn del libro: ")
+            repetir= Biblioteca.validar_entrada(isbn)
         disponible = input("El libro está disponible? (s/n): ")
         disponible = True if disponible == "s" else False
         try:
             self.libros.append(Libro(titulo,autor, isbn, disponible))
         except:
             print("Error al agregar el libro")
-        
+
     def prestar_libro(self, isbn:str):
         """
         (biblioteca, str) -> None
         Presta un libro de la biblioteca.
         """
         try:
-            libros = self.buscar_libro(isbn)                
+            libros = self.buscar_libro(isbn)
         except:
             print("Error al buscar el libro")
         if len(libros) > 0:
             for libro in libros:
                 if libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
-                    print("Libro prestado.")                    
-                    break       
-                else:
-                    print("El libro no está disponible.")
+                    print("Libro prestado.")
+                    return
+            print("El libro no está disponible.")
         else:
             print("El libro no está en la biblioteca.")
-    
+
     def devolver_libro(self, isbn:str):
         """
         (biblioteca, str) -> None
@@ -113,10 +130,9 @@ class Biblioteca:
             for libro in libros:
                 if not libro.get_disponibilidad():
                     libro.cambiar_disponibilidad()
-                    print("Libro devuelto.")                    
-                    break
-                else:
-                    print("El libro no está prestado.")
+                    print("Libro devuelto.")
+                    return
+            print("El libro no está prestado.")
         else:
             print("El libro no está en la biblioteca.")
 
@@ -125,29 +141,30 @@ class Biblioteca:
         (biblioteca) -> str
         Muestra los libros de la biblioteca.
         """
-        #print('\n'.join([libro.get_info() for libro in self.libros]))        
+        #print('\n'.join([libro.get_info() for libro in self.libros]))
         if len(self.libros) > 0:
             max_titulo = max(len(libro.titulo) for libro in self.libros)
             max_autor = max(len(libro.autor) for libro in self.libros)
             max_isbn = max(len(libro.isbn) for libro in self.libros)
-            
             print("*" * (max_titulo + max_autor + max_isbn + 20))
-            print(f"* {'Título':<{max_titulo}} * {'Autor':<{max_autor}} * {'ISBN':<{max_isbn}} * {'Disponibilidad':<14} *")
+            print(f"* {'Título':<{max_titulo}} * {'Autor':<{max_autor}} * {'ISBN':<{max_isbn}} * " \
+                    f"{'Disponibilidad':<14} *")
             print("*" * (max_titulo + max_autor + max_isbn + 20))
             for libro in self.libros:
-                print(f"* {libro.titulo:<{max_titulo}} * {libro.autor:<{max_autor}} * {libro.isbn:<{max_isbn}} * {'Disponible' if libro.disponible else 'No disponible':<14} *")
+                print(f"* {libro.titulo:<{max_titulo}} * {libro.autor:<{max_autor}} * " \
+                        f"{libro.isbn:<{max_isbn}} * " \
+                        f"{'Disponible' if libro.disponible else 'No disponible':<14} *")
             print("*" * (max_titulo + max_autor + max_isbn + 20))
         else:
             print("No hay libros en la biblioteca.")
 
-  
-    
     def buscar_libro(self, isbn:str):
         """
         (biblioteca, str) -> list
         Busca un libro por su isbn.
-        """    
-        return  list(filter(lambda self: isbn in self.isbn , self.libros))
+        """
+        return  list(filter(lambda libro: libro.isbn == isbn , self.libros))
+
 
 
 class Sistema:
@@ -171,14 +188,15 @@ class Sistema:
         """
         print("Menú:")
         print('*'*21)
-        for key, value in self.opciones.items():            
+        for key, value in self.opciones.items():
             cadena = f"* {key}: {value}"
             longitud_cadena = len(cadena)
             if longitud_cadena < 20:
                 espacios_necesarios = 20 - longitud_cadena
                 cadena = cadena + " " * espacios_necesarios + '*'
             print(cadena)
-            print('*'*21)
+            print('*                   *')
+        print('*'*21)
 
     def limpiar_pantalla(self):
         """
@@ -193,10 +211,12 @@ class Sistema:
         (Menu) -> str
         Selecciona una opción del menú.
         """
+        print()
         opcion = input("Seleccione una opción: ")
         while opcion not in self.opciones.keys():
             print("Opción inválida.")
-            opcion = input("Seleccione una opción: ")        
+            print()
+            opcion = input("Seleccione una opción: ")
         return opcion
 
     def agregar_libro(self, biblioteca:Biblioteca):
@@ -206,10 +226,10 @@ class Sistema:
         """
         error= False
         while not error:
-            try:                
+            try:
                 biblioteca.agregar_libro()
                 print("Libro agregado correctamente.")
-                error = True                
+                error = True
             except:
                 print("Error al agregar el libro")
         self.pausar()
@@ -230,6 +250,7 @@ class Sistema:
         """
         isbn = input("Ingrese el isbn del libro: ")
         biblioteca.devolver_libro(isbn)
+        self.pausar()
 
     def pausar(self):
         """
@@ -251,7 +272,6 @@ class Sistema:
         else:
             print("El libro no está en la biblioteca.")
         self.pausar()
-        
 
 libros_inicio = [
     ["Cien años de soledad", "Gabriel García Márquez", "978-0307474727", True],
@@ -269,24 +289,28 @@ libros_inicio = [
 
 mi_biblioteca = Biblioteca()
 
-for libro in libros_inicio:        
-   mi_biblioteca.agregar_clase_libro(Libro(libro[0], libro[1], libro[2], libro[3]))
+for libro_actual in libros_inicio:
+    mi_biblioteca.agregar_clase_libro(Libro(libro_actual[0], libro_actual[1], \
+                                            libro_actual[2], libro_actual[3]))
 sistema = Sistema()
 
 sistema.mostrar_menu()
-opcion = int (sistema.seleccionar_opcion())
-while opcion != 6:
-    if opcion == 1:
+seleccion = int (sistema.seleccionar_opcion())
+print()
+while seleccion != 6:
+    if seleccion == 1:
         sistema.agregar_libro(mi_biblioteca)
-    elif opcion == 2:
+    elif seleccion == 2:
         sistema.prestar_libro(mi_biblioteca)
-    elif opcion == 3:
+    elif seleccion == 3:
         sistema.devolver_libro(mi_biblioteca)
-    elif opcion == 4:
+    elif seleccion == 4:
         mi_biblioteca.mostrar_libros()
         sistema.pausar()
-    elif opcion == 5:
+    elif seleccion == 5:
         sistema.buscar(mi_biblioteca)
+    print()
     sistema.mostrar_menu()
-    opcion = int (sistema.seleccionar_opcion())
-
+    print()
+    seleccion = int (sistema.seleccionar_opcion())
+    print()
