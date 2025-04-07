@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Crear Contactos{% endblock %}
+{% block header %}
+    <nav>
+        <ul>                
+            <li><a href="{{ url_for('listar_contactos') }}">Listar Contactos</a></li>                
+        </ul>
+    </nav>
+{% endblock %}
+{% block main %}
+<h1>Sistema de Contactos</h1>
+<form method="post" action="{{ url_for('guardar_contacto') }}">
+    {{ form.csrf_token }}
+    
+    {{ form.nombre.label(class_="form-control") }}{{ form.nombre }}
+    {% if form.nombre.errors %}
+        <ul class="errors">
+        {% for error in form.nombre.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <div class="container">
+        <div class="">
+            {{ form.apellido.label }}{{ form.apellido }}        
+        </div>
+        <div class="">
+            {{ form.email.label }}{{ form.email }}
+        </div>
+        <div class="">
+            {{ form.telefono.label }}{{ form.telefono }}
+        </div>
+        {% if form.telefono.errors %}
+            <ul class="errors">
+            {% for error in form.telefono.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {{ form.guardar }}                    
+    </div>
+</form>
+{% endblock %}
+

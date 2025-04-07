@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task 2{% endblock %}</title>
+    {%block stylesheet%}
+        <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+    {%endblock%}
+    {%block scripts%}        
+    {%endblock%}
+</head>
+<body>
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    <main>
+        {% block main %}
+            <h1>Sistema de Contactos</h1>
+        {% endblock %}
+    </main>
+    <footer>
+        {% block footer %}
+            <p>&copy; 2025 Sistema de Contactos</p>
+        {% endblock %}
+    </footer>
+
+</body>
+</html>

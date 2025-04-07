@@ -1,1 +1,7 @@
 ./gh-copilot-bootcamp-python-ai-demo-2025
+
+./contacto/node_modules/
+./contacto/src/
+./contacto/venv/
+./contacto/package-lock.json
+./contacto/package.json
