@@ -5,3 +5,5 @@
 ./contacto/venv/
 ./contacto/package-lock.json
 ./contacto/package.json
+
+**/test**
